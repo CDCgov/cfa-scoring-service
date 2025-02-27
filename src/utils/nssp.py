@@ -54,7 +54,7 @@ def filter_geography(
     Returns:
         pl.LazyFrame: parquet reference to filtered dataset
     """
-    if not geo_values:
+    if not geo_values or len(geo_values) == 0:
         return data
 
     return data.filter(pl.col(NSSP.GEO_COL).is_in(geo_values))
