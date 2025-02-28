@@ -42,19 +42,30 @@ def test_filter_disease_none(nssp_gold_df: pl.LazyFrame):
     assert nssp_gold_df.collect().equals(df_filtered.collect())
 
 
-def test_parse_disease_covid():
-    disease = "covid19"
-    parsed_disease = parse_disease(disease)
-    assert parsed_disease == NSSP.COVID_KEY
-
-
-def test_parse_disease_flu():
-    disease = "flu"
-    parsed_disease = parse_disease(disease)
-    assert parsed_disease == NSSP.FLU_KEY
-
-
-def test_parse_disease_invalid():
-    disease = "corvid19"
-    with pytest.raises(ValueError):
-        parse_disease(disease)
+@pytest.mark.parametrize(
+    "disease, expected, should_fail",
+    [
+        ("covid19", NSSP.COVID_KEY, False),
+        ("covid", NSSP.COVID_KEY, False),
+        ("covid-19", NSSP.COVID_KEY, False),
+        ("COVID-19", NSSP.COVID_KEY, False),
+        ("COVID", NSSP.COVID_KEY, False),
+        ("flu", NSSP.FLU_KEY, False),
+        ("Flu", NSSP.FLU_KEY, False),
+        ("influenza", NSSP.FLU_KEY, False),
+        ("Influenza", NSSP.FLU_KEY, False),
+        ("corvid19", None, True),
+        ("", None, True),
+        ("influ", None, True),
+        ("flu-19", None, True),
+        ("Flu-19", None, True),
+    ],
+)
+def test_parse_disease(disease, expected, should_fail):
+    if should_fail:
+        with pytest.raises(ValueError):
+            parse_disease(disease)
+    else:
+        parsed_disease = parse_disease(disease)
+        assert parsed_disease == expected
+        assert isinstance(parsed_disease, str)
