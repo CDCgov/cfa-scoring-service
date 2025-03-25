@@ -12,8 +12,8 @@ option_list = list(
   ),
   make_option(
     c("-r", "--report_date"),
-    help = "The vintage of the data to which the model was fit. 
-    Currently only used to check that the vintage is not too 
+    help = "The vintage of the data to which the model was fit.
+    Currently only used to check that the vintage is not too
     recent relative to the final data.
     ",
     type = "character"
