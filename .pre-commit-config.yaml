@@ -11,17 +11,14 @@ repos:
       - id: mixed-line-ending
       - id: trailing-whitespace
   #####
-  # Python
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.7.2
+  # R
+  - repo: https://github.com/lorenzwalthert/precommit
+    rev: v0.4.3
     hooks:
-      # Sort imports
-      - id: ruff
-        args: ["check", "--select", "I", "--fix"]
-      # Run the linter
-      - id: ruff
-      # Run the formatter
-      - id: ruff-format
+      - id: style-files
+      - id: deps-in-desc
+        args: [--allow_private_imports]
+      - id: lintr
 
   #####
   # Secrets
@@ -31,14 +28,3 @@ repos:
       - id: detect-secrets
         args: ["--baseline", ".secrets.baseline"]
         exclude: package.lock.json
-
-ci:
-  autofix_commit_msg: |
-    [pre-commit.ci] auto fixes from pre-commit.com hooks
-
-    for more information, see https://pre-commit.ci
-  autofix_prs: true
-  autoupdate_branch: ""
-  autoupdate_commit_msg: "[pre-commit.ci] pre-commit autoupdate"
-  autoupdate_schedule: weekly
-  submodules: false
