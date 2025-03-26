@@ -20,7 +20,7 @@ The path of the file
 Download if specified
 }
 \seealso{
-Other azure: 
+Other azure:
 \code{\link{download_file_from_container}()},
 \code{\link{fetch_blob_container}()},
 \code{\link{fetch_credential_from_env_var}()}

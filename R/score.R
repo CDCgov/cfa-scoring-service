@@ -10,12 +10,12 @@
 #' @export
 write_scores <- function(predicted, report_date, final, output) {
   final <- arrow::read_parquet(final) |>
-  filter(metric == "count_ed_visits", !is.na(geo_value)) |>
-  dplyr::summarize(
-    observed = sum(value),
-    .by = c("reference_date", "report_date", "disease", "geo_value")
-  ) |>
-  dplyr::select(reference_date, disease, geo_value, observed)
+    filter(metric == "count_ed_visits", !is.na(geo_value)) |>
+    dplyr::summarize(
+      observed = sum(value),
+      .by = c("reference_date", "report_date", "disease", "geo_value")
+    ) |>
+    dplyr::select(reference_date, disease, geo_value, observed)
 
   predicted <- arrow::read_parquet(predicted) |>
     # Subset to forecasted cases
@@ -50,5 +50,3 @@ write_scores <- function(predicted, report_date, final, output) {
   arrow::write_parquet(scores, output)
   return(output)
 }
-
-

@@ -16,7 +16,7 @@ The associated value
 And throw an informative error if credential is not found
 }
 \seealso{
-Other azure: 
+Other azure:
 \code{\link{download_file_from_container}()},
 \code{\link{download_if_specified}()},
 \code{\link{fetch_blob_container}()}

@@ -24,7 +24,7 @@ Invisibly, \code{local_file_path}
 Download specified blobs from Blob Storage and save them in a local dir
 }
 \seealso{
-Other azure: 
+Other azure:
 \code{\link{download_if_specified}()},
 \code{\link{fetch_blob_container}()},
 \code{\link{fetch_credential_from_env_var}()}

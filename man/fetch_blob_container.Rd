@@ -31,7 +31,7 @@ warning in mind. Each variable is obtained using
 credential is not specified or empty).
 }
 \seealso{
-Other azure: 
+Other azure:
 \code{\link{download_file_from_container}()},
 \code{\link{download_if_specified}()},
 \code{\link{fetch_credential_from_env_var}()}
