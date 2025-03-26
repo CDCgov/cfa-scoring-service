@@ -10,31 +10,31 @@
 #' @export
 write_scores <- function(predicted, report_date, final, output) {
   final <- arrow::read_parquet(final) |>
-    dplyr::filter(metric == "count_ed_visits", !is.na(geo_value)) |>
+    dplyr::filter(.data$metric == "count_ed_visits", !is.na(.data$geo_value)) |>
     dplyr::summarize(
-      observed = sum(value),
+      observed = sum(.data$value),
       .by = c("reference_date", "report_date", "disease", "geo_value")
     ) |>
-    dplyr::select(reference_date, disease, geo_value, observed)
+    dplyr::select(.data$reference_date, .data$disease, .data$geo_value, .data$observed)
 
   predicted <- arrow::read_parquet(predicted) |>
     # Subset to forecasted cases
-    filter(`_variable` == "pp_nowcast_cases") |>
+    dplyr::filter(.data$`_variable` == "pp_nowcast_cases") |>
     dplyr::mutate(
-      report_date = as.Date(report_date),
+      report_date = as.Date(.data$report_date),
       # Last observed data point is day before report date
-      horizon = as.integer(reference_date - report_date + 1)
+      horizon = as.integer(.data$reference_date - .data$report_date + 1)
     ) |>
-    dplyr::filter(horizon >= -14)
+    dplyr::filter(.data$horizon >= -14)
 
 
   # Format for `{scoringutils}`
   forecast <- dplyr::inner_join(
-    predicted,
-    final,
-    by = dplyr::join_by(reference_date, geo_value, disease)
+    .data$predicted,
+    .data$final,
+    by = dplyr::join_by(.data$reference_date, .data$geo_value, .data$disease)
   ) |>
-    dplyr::rename(sample_id = `_draw`, predicted = value) |>
+    dplyr::rename(sample_id = .data$`_draw`, predicted = .data$value) |>
     scoringutils::as_forecast_sample(
       forecast_unit = c(
         "reference_date",
