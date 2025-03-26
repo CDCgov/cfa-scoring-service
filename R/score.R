@@ -35,7 +35,7 @@ write_scores <- function(predicted, report_date, final, output) {
     by = dplyr::join_by(reference_date, geo_value, disease)
   ) |>
     dplyr::rename(sample_id = `_draw`, predicted = value) |>
-    scoringutls::as_forecast_sample(
+    scoringutils::as_forecast_sample(
       forecast_unit = c(
         "reference_date",
         "report_date",
