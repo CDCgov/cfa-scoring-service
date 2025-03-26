@@ -8,4 +8,13 @@
 \description{
 Tools to score CFA models and interact with Azure.
 }
+\author{
+\strong{Maintainer}: Zack Susswein \email{utb2@cdc.gov}
+
+Authors:
+\itemize{
+  \item Agastya Mondal \email{ab59@cdc.gov}
+}
+
+}
 \keyword{internal}
