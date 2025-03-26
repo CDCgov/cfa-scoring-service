@@ -77,20 +77,10 @@ download_file_from_container <- function(
   invisible(local_file_path)
 }
 
-#' Load Azure Blob container using credentials in environment variables
-#'
-#' This function depends on the following Azure credentials stored in
-#' environment variables:
-#'
-#' * `az_tenant_id`: an Azure Active Directory (AAD) tenant ID
-#' * `az_subscription_id`: an Azure subscription ID
-#' * `az_resource_group`: The name of the Azure resource group
-#' * `az_storage_account`: The name of the Azure storage account
+#' Load Azure Blob container using managed identity credentials
 #'
 #' As a result it is an impure function, and should be used bearing that
-#' warning in mind. Each variable is obtained using
-#' [fetch_credential_from_env_var()] (which will return an error if the
-#' credential is not specified or empty).
+#' warning in mind.
 #'
 #' @param container_name The Azure Blob Storage container associated with the
 #'   credentials
@@ -101,29 +91,15 @@ fetch_blob_container <- function(container_name) {
   cli::cli_alert_info(
     "Attempting to connect to container {.var {container_name}}"
   )
-  cli::cli_alert_info("Loading Azure credentials from env vars")
-  # nolint start: object_name_linter
-  az_tenant_id <- fetch_credential_from_env_var("az_tenant_id")
-  az_client_id <- fetch_credential_from_env_var("az_client_id")
-  az_service_principal <- fetch_credential_from_env_var("az_service_principal")
-  # nolint end: object_name_linter
-  cli::cli_alert_success("Credentials loaded successfully")
 
-  cli::cli_alert_info("Authenticating with loaded credentials")
+  cli::cli_alert_info("Authenticating with managed identity credentials")
   rlang::try_fetch(
     {
       # First, get a general-purpose token using SP flow
       # Analogous to:
-      # az login --service-principal \
-      #    --username $az_client_id \
-      #    --password $az_service_principal \
-      #    --tenant $az_tenant_id
-      # NOTE: the SP is also sometimes called the `client_secret`
-      token <- AzureRMR::get_azure_token(
-        resource = "https://storage.azure.com",
-        tenant = az_tenant_id,
-        app = az_client_id,
-        password = az_service_principal
+      # az login --identity
+      token <- AzureAuth::get_managed_token(
+        resource = "https://storage.azure.com"
       )
       # Then fetch a storage endpoint using the token. Follows flow from
       # https://github.com/Azure/AzureStor.
@@ -151,29 +127,4 @@ fetch_blob_container <- function(container_name) {
   cli::cli_alert_success("Authenticated connection to {.var {container_name}}")
 
   return(container)
-}
-
-#' Fetch Azure credential from environment variable
-#'
-#' And throw an informative error if credential is not found
-#'
-#' @param env_var A character, the credential to fetch
-#'
-#' @return The associated value
-#' @family azure
-#' @export
-fetch_credential_from_env_var <- function(env_var) {
-  credential <- Sys.getenv(env_var)
-
-  if (credential == "") {
-    cli::cli_abort(
-      c(
-        "Error loading Azure credentials from environment variables",
-        "!" = "Environment variable {.envvar {env_var}} not specified or empty"
-      ),
-      class = "CFA_Rt"
-    )
-  }
-
-  return(credential)
 }
