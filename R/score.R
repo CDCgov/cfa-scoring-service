@@ -15,7 +15,12 @@ write_scores <- function(predicted, report_date, final, output) {
       observed = sum(.data$value),
       .by = c("reference_date", "report_date", "disease", "geo_value")
     ) |>
-    dplyr::select(.data$reference_date, .data$disease, .data$geo_value, .data$observed)
+    dplyr::select(
+      .data$reference_date,
+      .data$disease,
+      .data$geo_value,
+      .data$observed
+    )
 
   predicted <- arrow::read_parquet(predicted) |>
     # Subset to forecasted cases
