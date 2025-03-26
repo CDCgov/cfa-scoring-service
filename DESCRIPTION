@@ -3,7 +3,7 @@ Title: CFA Scoring Service
 Version: 0.0.0.9000
 Authors@R: c(
     person("Zack", "Susswein", , "utb2@cdc.gov", role = c("aut", "cre")),
-    person("Agastya", "Mondal", ,"ab59@cdc.gov", role = c("aut", "cre"))
+    person("Agastya", "Mondal", ,"ab59@cdc.gov", role = c("aut"))
     )
 Description: Tools to score CFA models and interact with Azure.
 License: Apache License (>= 2)
