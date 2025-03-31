@@ -15,4 +15,5 @@ score predicted report_date final output:
         '{{report_date}}',\
         local_path_final,\
         '{{output}}'\
-    );"
+    );\
+    cfascoring::upload_to_container('{{output}}', 'scoring-test-output');"
