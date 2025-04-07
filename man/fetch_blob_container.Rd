@@ -20,6 +20,7 @@ warning in mind.
 \seealso{
 Other azure:
 \code{\link{download_file_from_container}()},
-\code{\link{download_if_specified}()}
+\code{\link{download_if_specified}()},
+\code{\link{upload_to_container}()}
 }
 \concept{azure}

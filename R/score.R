@@ -26,18 +26,21 @@ write_scores <- function(predicted, report_date, final, output) {
     # Subset to forecasted cases
     dplyr::filter(.data$`_variable` == "pp_nowcast_cases") |>
     dplyr::mutate(
-      report_date = as.Date(.data$report_date),
+      report_date = as.Date(report_date),
       # Last observed data point is day before report date
-      horizon = as.integer(.data$reference_date - .data$report_date + 1)
+      horizon = as.integer(.data$reference_date - report_date + 1)
     ) |>
-    dplyr::filter(.data$horizon >= -14)
-
-
+    dplyr::filter(.data$horizon >= -14) |>
+    dplyr::mutate(disease = replace(
+      .data$disease,
+      .data$disease == "COVID-19",
+      "COVID-19/Omicron"
+    ))
   # Format for `{scoringutils}`
   forecast <- dplyr::inner_join(
-    .data$predicted,
-    .data$final,
-    by = dplyr::join_by(.data$reference_date, .data$geo_value, .data$disease)
+    predicted,
+    final,
+    by = c("reference_date", "geo_value", "disease")
   ) |>
     dplyr::rename(sample_id = .data$`_draw`, predicted = .data$value) |>
     scoringutils::as_forecast_sample(

@@ -29,6 +29,25 @@ download_if_specified <- function(
   local_path
 }
 
+#' Upload to container
+#'
+#' @param blob_path The local path of the blob to upload
+#' @param blob_storage_container The name of the container to upload to
+#' @return The path of the file
+#' @family azure
+#' @export
+upload_to_container <- function(
+    blob_path,
+    blob_storage_container) {
+  if (!rlang::is_null(blob_storage_container)) {
+    container <- fetch_blob_container(blob_storage_container)
+    AzureStor::upload_blob(
+      container = container,
+      src = blob_path
+    )
+  }
+}
+
 #' Download specified blobs from Blob Storage and save them in a local dir
 #'
 #' @param blob_storage_path A character of a blob in `storage_container`
